@@ -50,25 +50,25 @@ crm(prior, target, tox, level, n = length(level), dosename = NULL,
     interval of the returned dose-toxicity curve.}
  
   \item{method}{A character string to specify the method for parameter
-    estimation.  The default method ``bayes'' estimates the model
+    estimation.  The default method \code{"bayes"} estimates the model
     parameter by the posterior mean.  Maximum likelihood estimation
-    is specified by ``mle''.}
+    is specified by \code{"mle"}.}
 
   \item{model}{A character string to specify the working model used in
-    the method.  The default model is ``empiric''.  A one-parameter
-    logistic model is specified by ``logistic''.}
+    the method.  The default model is \code{"empiric"}.  A one-parameter
+    logistic model is specified by \code{"logistic"}.}
 
   \item{intcpt}{The intercept of the working logistic model.  The
-    default is 3.  If \code{model}=``empiric'', this argument will be
+    default is 3.  If \code{model="empiric"}, this argument will be
     ignored.}
 
   \item{scale}{Standard deviation of the normal prior of the model
     parameter.  Default is sqrt(1.34).}
 
-  \item{model.detail}{If FALSE, the model content of an ``mtd'' object
+  \item{model.detail}{If FALSE, the model content of an \code{"mtd"} object
     will not be displayed.  Default is TRUE.}
   
-  \item{patient.detail}{If FALSE, patient summary of an ``mtd'' object
+  \item{patient.detail}{If FALSE, patient summary of an \code{"mtd"} object
     will not be displayed.  Default is TRUE.}
   
   \item{var.est}{If TRUE, variance of the estimate of the model parameter and
@@ -77,7 +77,7 @@ crm(prior, target, tox, level, n = length(level), dosename = NULL,
 }
 
 \value{
-  An object of class ``mtd'' is returned, consisting of the summary
+  An object of class \code{"mtd"} is returned, consisting of the summary
   of dose assignments thus far and the recommendation of dose for the
   next patient.
 
@@ -113,13 +113,13 @@ crm(prior, target, tox, level, n = length(level), dosename = NULL,
 
 \details{
   For maximum likelihood estimation, the variance of the estimate of
-  $\beta$ (\code{post.var}) is approximated by the posterior variance of
-  $\beta$ with a dispersed normal prior.
+  \eqn{\beta} (\code{post.var}) is approximated by the posterior variance of
+  \eqn{\beta} with a dispersed normal prior.
 
-  The empiric model is specified as $F(d, \beta) = d^{\exp(\beta)}$.
-  The logistic model is specified as logit$(F(d,\beta))$ = \code{intcpt}
-  $+ \exp(\beta) \times d$.  For method=\code{bayes}, the prior on
-  $\beta$ is normal with mean 0.  Exponentiation of $\beta$ ensures an
+  The empiric model is specified as \eqn{F(d, \beta) = d^{\exp(\beta)}}.
+  The logistic model is specified as logit \eqn{(F(d,\beta))} = \code{intcpt}
+  \eqn{+ \exp(\beta) \times d}.  For \code{method="bayes"}, the prior on
+  \eqn{\beta} is normal with mean 0.  Exponentiation of \eqn{\beta} ensures an
   increasing dose-toxicity function.
   }
 
@@ -132,11 +132,11 @@ crm(prior, target, tox, level, n = length(level), dosename = NULL,
 \examples{
 
 # Create a simple data set
-prior <- c(0.05,0.10,0.20,0.35,0.50,0.70)
+prior <- c(0.05, 0.10, 0.20, 0.35, 0.50, 0.70)
 target <- 0.2
-level <- c(3,4,4,3,3,4,3,2,2,2)
-y <- c(0,0,1,0,0,1,1,0,0,0)
-foo <- crm(prior,target,y,level)
+level <- c(3, 4, 4, 3, 3, 4, 3, 2, 2, 2)
+y <- c(0, 0, 1, 0, 0, 1, 1, 0, 0, 0)
+foo <- crm(prior, target, y, level)
 ptox <- foo$ptox  # updated estimates of toxicity rates
 
 }
