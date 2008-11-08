@@ -47,7 +47,7 @@ crmsens(prior, target, model = "empiric", intcpt = 3, eps = 1e-06,
 
 
 \seealso{
-  \code{\link{getprior}}
+  \code{\link{crm}}, \code{\link{getprior}}
 }
 
 \references{

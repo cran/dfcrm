@@ -115,7 +115,13 @@ crm(prior, target, tox, level, n = length(level), dosename = NULL,
   For maximum likelihood estimation, the variance of the estimate of
   $\beta$ (\code{post.var}) is approximated by the posterior variance of
   $\beta$ with a dispersed normal prior.
-}
+
+  The empiric model is specified as $F(d, \beta) = d^{\exp(\beta)}$.
+  The logistic model is specified as logit$(F(d,\beta))$ = \code{intcpt}
+  $+ \exp(\beta) \times d$.  For method=\code{bayes}, the prior on
+  $\beta$ is normal with mean 0.  Exponentiation of $\beta$ ensures an
+  increasing dose-toxicity function.
+  }
 
 \references{
   O'Quigley, J. O., Pepe, M., and Fisher, L. (1990).  Continual

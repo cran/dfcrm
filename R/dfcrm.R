@@ -71,7 +71,7 @@ crm <- function(prior, target, tox, level, n=length(level),
   else if (model=="logistic") {
     dosescaled <- log(prior/(1-prior)) - intcpt
     if (!all(dosescaled<0)) {
-      stop( "slope parameter in logit model is too small: scaled doses > 0!")
+      stop( "Intercept parameter in logit model is too small: scaled doses > 0!")
     }
     
     x1p <<- dosescaled[level[include]]
@@ -214,11 +214,11 @@ mtrials <- function(nsim, PI, prior, target, n, x0, mcohort=1, restrict=TRUE, co
     }
 
     if (method=="mle" & (sum(ycur)==0|mean(ycur)==1)) {
-      finalobj <- crm(prior, target, ycur, xcur, model=model, intcpt=intcpt,scale=500)
+      finalobj <- crm(prior, target, ycur, xcur, model=model, intcpt=intcpt,scale=500, var.est=FALSE)
       msg <- "Warning: mle is approximated"
     }
     else {
-      finalobj <- crm(prior, target, ycur, xcur, method=method,model=model,intcpt=intcpt,scale=scale)
+      finalobj <- crm(prior, target, ycur, xcur, method=method,model=model,intcpt=intcpt,scale=scale, var.est=FALSE)
       msg <- "Okay"
     }
     rec <- finalobj$mtd
@@ -428,7 +428,7 @@ titecrm <- function(prior, target, tox, level, n=length(level),
   else if (model=="logistic") {
     dosescaled <- log(prior/(1-prior)) - intcpt
     if (!all(dosescaled<0)) {
-      stop( "slope parameter in logit model is too small: scaled doses > 0!")
+      stop( "intercept parameter in logit model is too small: scaled doses > 0!")
     }
 #    LB <- log(  (log((1+target)/(1-target)) - intcpt)/dosescaled[1] ) - 3
 #    UB <- log(  (log((target/2)/(1-target/2)) - intcpt)/dosescaled[length(prior)] ) + 3
@@ -1102,12 +1102,15 @@ mtite <- function(nsim, PI, prior, target, n, x0, restrict=TRUE, obswin=1, tgrp=
         censor <- pmin(next.arrival,utox) - arrival
         followup <- pmin(censor,obswin)
         obj <- titecrm(prior,target,B,level,followup=followup,obswin=obswin, scheme=scheme, method=method,model=model,intcpt=intcpt,scale=scale,var.est=FALSE)
-        if (restrict) { cur <- min(obj$mtd, (cur+1)); }
-        else { cur <- obj$mtd; }
+        if (restrict) {
+          cur <- min(obj$mtd, (cur+1))
+        }
+        else {
+          cur <- obj$mtd
+        }
         bethat <- c(bethat, obj$est)
       }
       BETAHAT[r,] <- bethat
-      
       arrival <- c(arrival, next.arrival)
       level <- c(level,cur)
       if (surv=="uniform") {
@@ -1127,7 +1130,7 @@ mtite <- function(nsim, PI, prior, target, n, x0, restrict=TRUE, obswin=1, tgrp=
     DURATION[r] <- max(arrival) + obswin
     for (k in 1:length(prior)) {
       nexpt[k] <- nexpt[k] + length(which(level==k))
-      ntox[k] <- nexpt[k] + length(which(y==1 & level==k))
+      ntox[k] <- ntox[k] + length(which(y==1 & level==k))
     }
   }
   sel <- sel/nsim

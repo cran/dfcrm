@@ -146,12 +146,13 @@ tite = TRUE)
   \item{scheme}{Weighting scheme.}
 }
 \details{
-  For maximum likelihood estimation, the variance of the estimate of
-  $\beta$ (\code{post.var}) is approximated by the posterior variance of
-  $\beta$ with a dispersed normal prior.
-  
   The adaptive weighting scheme is given in Cheung and Chappell (2000)
   given in the reference list.
+}
+
+
+\seealso{
+  \code{\link{crm}}
 }
 
 \references{
