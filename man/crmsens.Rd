@@ -54,12 +54,14 @@ crmsens(prior, target, model = "empiric", intcpt = 3, eps = 1e-06,
   Cheung, Y. K. and Chappell, R. (2002). A simple technique to evaluate
   model sensitivity in the continual reassessment method.  Biometrics
   58:671-674.
+
+  Cheung, Y. K. (2011).  Dose Finding by the Continual Reassessment Method.  New York: Chapman & Hall/CRC Press.
 }
 
 \examples{
-prior <- c(0.05,0.10,0.20,0.35,0.50,0.70)
+prior <- c(0.05, 0.10, 0.20, 0.35, 0.50, 0.70)
 target <- 0.2
-foo <- crmsens(prior,target,model="logistic",intcpt=2,detail=TRUE)
+foo <- crmsens(prior, target, model="logistic", intcpt=2, detail=TRUE)
 }
 
 \keyword{datasets}

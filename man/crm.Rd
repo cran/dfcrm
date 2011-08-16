@@ -127,6 +127,8 @@ crm(prior, target, tox, level, n = length(level), dosename = NULL,
   O'Quigley, J. O., Pepe, M., and Fisher, L. (1990).  Continual
   reassessment method: A practical design for phase I clinical trials in
   cancer.  Biometrics 46:33-48.
+
+  Cheung, Y. K. (2011).  Dose Finding by the Continual Reassessment Method.  New York: Chapman & Hall/CRC Press.
 }
 
 \examples{

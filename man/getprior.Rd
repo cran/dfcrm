@@ -45,6 +45,10 @@ getprior(halfwidth, target, nu, nlevel, model = "empiric", intcpt = 3)
   Cheung, Y. K. and Chappell, R. (2002). A simple technique to evaluate
   model sensitivity in the continual reassessment method.  Biometrics
   58:671-674.
+
+  Lee, S. M. and Cheung Y. K. (2009).  Model calibration in the continual reassessment method.  Clinical Trials 6, 227-238.
+
+  Cheung, Y. K. (2011).  Dose Finding by the Continual Reassessment Method.  New York: Chapman & Hall/CRC Press.
 }
 
 \examples{
@@ -53,7 +57,7 @@ delta <- 0.10
 mtd0 <- 3
 
 # initial DLT rates with indifference intervals [0.15, 0.35].
-prior <- getprior(delta, target, mtd0,nlevel=6, model="logistic")
+prior <- getprior(delta, target, mtd0, nlevel=6, model="logistic")
 }
 
 \keyword{datasets}

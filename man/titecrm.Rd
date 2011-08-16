@@ -158,33 +158,35 @@ tite = TRUE)
 \references{
   Cheung, Y. K. and Chappell, R. (2000). Sequential designs for phase I
   clinical trials with late-onset toxicities.  Biometrics 56:1177-1182.
+  
+  Cheung, Y. K. (2011).  Dose Finding by the Continual Reassessment Method.  New York: Chapman & Hall/CRC Press.
 }
 
 \examples{
 
 # Create a simple data set
-prior <- c(0.05,0.10,0.20,0.35,0.50,0.70)
+prior <- c(0.05, 0.10, 0.20, 0.35, 0.50, 0.70)
 target <- 0.2
-level <- c(3,3,3,4,4,3,2,2,2,3)
-y <- c(0,0,1,0,1,0,0,0,0,0)
-u <- c(178,181,168,181,24,181,179, 102, 42, 3)
+level <- c(3, 3, 3, 4, 4, 3, 2, 2, 2, 3)
+y <- c(0, 0, 1, 0, 1, 0, 0, 0, 0, 0)
+u <- c(178, 181, 168, 181, 24, 181, 179, 102, 42, 3)
 tau <- 180
-foo <- titecrm(prior,target,y,level,followup=u,obswin=tau)
+foo <- titecrm(prior, target, y, level, followup=u, obswin=tau)
 rec <- foo$mtd  # recommend a dose level for next patient
 
 # An example with adaptive weight
-foo2 <- titecrm(prior,target,y,level,followup=u,obswin=tau,scheme="adaptive")
+foo2 <- titecrm(prior, target, y, level, followup=u, obswin=tau, scheme="adaptive")
 wts <- foo2$weights
 
 # The `weights' argument makes `followup' and `obswin' obsolete
-foo3 <- titecrm(prior,target,y,level,weights=wts,followup=u,obswin=tau)
-\dontrun{plot(foo3,ask=T)}
+foo3 <- titecrm(prior, target, y, level, weights=wts, followup=u, obswin=tau)
+\dontrun{plot(foo3, ask=T)}
 
 # Patient time information via `entry' and `exit' arguments
 entry <- c(7, 29, 49, 76, 92, 133, 241, 303, 363, 402) # entry time (days since study begins)
-exit <- c(185,210,217,257,116,314,420,405,405,405) # exit time (days since study begins)
-foo4 <- titecrm(prior,target,y,level,exit=exit,entry=entry,obswin=tau)
-\dontrun{plot(foo4,ask=T)}
+exit <- c(185, 210, 217, 257, 116, 314, 420, 405, 405, 405) # exit time (days since study begins)
+foo4 <- titecrm(prior, target, y, level, exit=exit, entry=entry, obswin=tau)
+\dontrun{plot(foo4, ask=T)}
 
 }
 

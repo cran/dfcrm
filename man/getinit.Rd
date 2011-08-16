@@ -62,17 +62,19 @@ getinit(prior, target, n, nK = round(n/3), method = "bayes",
 \references{
   Cheung, Y. K. (2005). Coherence principles in dose-finding studies.
   Biometrika 92:863-873.
+
+  Cheung, Y. K. (2011).  Dose Finding by the Continual Reassessment Method.  New York: Chapman & Hall/CRC Press.  
 }
 
 \examples{
-prior <- c(0.05,0.10,0.20,0.35,0.50,0.70)
+prior <- c(0.05, 0.10, 0.20, 0.35, 0.50, 0.70)
 target <- 0.2
 
 # Seach stops because it requires at least 8 subjects at the highest dose
-getinit(prior,target,25,nK=8,method="mle",detail=TRUE)
+getinit(prior, target, 25, nK=8, method="mle", detail=TRUE)
 
 # Search stops because an incompatible design is reached
-getinit(prior,0.3,25,nK=8,method="mle",detail=TRUE)
+getinit(prior, 0.3, 25, nK=8, method="mle", detail=TRUE)
 
 
 

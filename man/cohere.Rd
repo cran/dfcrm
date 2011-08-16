@@ -50,18 +50,20 @@ cohere(prior, target, x0, method = "bayes", model = "empiric",
 \references{
   Cheung, Y. K. (2005). Coherence principles in dose-finding studies.
   Biometrika 92:863-873.
+  
+  Cheung, Y. K. (2011).  Dose Finding by the Continual Reassessment Method.  New York: Chapman & Hall/CRC Press.
 }
 
 \examples{
-prior <- c(0.05,0.10,0.20,0.35,0.50,0.70)
-x0 <- c(rep(1,3),rep(2,3),rep(3,3),rep(4,3),rep(5,3),rep(6,9))
+prior <- c(0.05, 0.10, 0.20, 0.35, 0.50, 0.70)
+x0 <- c(rep(1,3), rep(2,3), rep(3,3), rep(4,3), rep(5,3), rep(6,9))
 
 # The above design is coherent when target rate = 0.20
-foo <- cohere(prior,target=0.2,x0)
+foo <- cohere(prior, target=0.2, x0)
 foo
 
 # The design is incoherent if a larger target DLT rate is used.
-foo2 <- cohere(prior,target=0.3,x0)
+foo2 <- cohere(prior, target=0.3, x0)
 }
 
 \keyword{datasets}

@@ -116,20 +116,22 @@ crmsim(PI, prior, target, n, x0, nsim = 1, mcohort = 1, restrict = TRUE,
   
   Cheung, Y. K. (2005). Coherence principles in dose-finding studies.
   Biometrika 92:863-873.
+  
+  Cheung, Y. K. (2011).  Dose Finding by the Continual Reassessment Method.  New York: Chapman & Hall/CRC Press.
 }
 
 \examples{
-PI <- c(0.10,0.20,0.40,0.50,0.60,0.65)
-prior <- c(0.05,0.10,0.20,0.35,0.50,0.70)
+PI <- c(0.10, 0.20, 0.40, 0.50, 0.60, 0.65)
+prior <- c(0.05, 0.10, 0.20, 0.35, 0.50, 0.70)
 target <- 0.2
-x0 <- c(rep(1,3),rep(2,3),rep(3,3),rep(4,3),rep(5,3),rep(6,9))
+x0 <- c(rep(1,3), rep(2,3), rep(3,3), rep(4,3), rep(5,3), rep(6,9))
 
 # Generate a single replicate of two-stage group CRM trial of group size 3
-foo <- crmsim(PI,prior,target,24,x0, mcohort=3)
+foo <- crmsim(PI, prior, target, 24, x0, mcohort=3)
 \dontrun{plot(foo,ask=T)}  # summarize trial graphically
 
 # Generate 10 replicates of CRM trial with 24 subjects
-foo10 <- crmsim(PI,prior,target,24,3,nsim=10,mcohort=2)
+foo10 <- crmsim(PI, prior, target, 24, 3, nsim=10, mcohort=2)
 foo10
 }
 
