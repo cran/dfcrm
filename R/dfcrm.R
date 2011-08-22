@@ -681,7 +681,13 @@ cohere <- function(prior,target,x0,method="bayes",model="empiric",intcpt=3,
       y <- c(rep(0,(i-1)),1)
       obj <- crm(prior,target,y,level,method=method,model=model,intcpt=intcpt,scale=scale,var.est=FALSE)
       est <- obj$estimate
-      pest <- prior^exp(est)
+      if (model=="logistic") {
+	  pest = exp( intcpt + exp(est)*( log(prior/(1-prior)) - intcpt ) )
+	  pest = pest/(1+pest)
+ 	}
+	else {
+	  pest <- prior^exp(est)
+	}
       cur <- order(abs(pest-target))[1]
       if (cur > level[i]) { 
         coh[i] <- FALSE; vlevel[i] <- cur;

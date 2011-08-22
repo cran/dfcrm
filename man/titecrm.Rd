@@ -182,9 +182,11 @@ wts <- foo2$weights
 foo3 <- titecrm(prior, target, y, level, weights=wts, followup=u, obswin=tau)
 \dontrun{plot(foo3, ask=T)}
 
-# Patient time information via `entry' and `exit' arguments
-entry <- c(7, 29, 49, 76, 92, 133, 241, 303, 363, 402) # entry time (days since study begins)
-exit <- c(185, 210, 217, 257, 116, 314, 420, 405, 405, 405) # exit time (days since study begins)
+## Patient time information via `entry' and `exit' arguments
+# entry time (days since study begins)
+entry <- c(7, 29, 49, 76, 92, 133, 241, 303, 363, 402)
+# exit time (days since study begins)
+exit <- c(185, 210, 217, 257, 116, 314, 420, 405, 405, 405)
 foo4 <- titecrm(prior, target, y, level, exit=exit, entry=entry, obswin=tau)
 \dontrun{plot(foo4, ask=T)}
 

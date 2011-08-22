@@ -1,11 +1,12 @@
 0e100b626d7b35e131c90d9678f54626 *CONTENTS
-4a10c4513a968a7bf4cd252a4b6f6cea *DESCRIPTION
-fc79047b1b5c92f6d80cc83e87125700 *R/dfcrm.R
+2f69b583cb884f2a3fd8c0d8820643b0 *DESCRIPTION
+9fdfeb11f7ddba6f3aab9aaa6b1ac5dd *NAMESPACE
+5b001731c883d13e3aad76622fbd3ea2 *R/dfcrm.R
 9ac8613494839c8e78144bd8af56bd4c *man/cohere.Rd
 92370bc6cae52c17d006f10752c1ca89 *man/crm.Rd
 a6edc5bb162a3c3d52cee76f4ab272de *man/crmsens.Rd
 1d5f46ebb44313489d9a4790f4c4d210 *man/crmsim.Rd
 7616615b423e9d5e0f6123b47eef4e0b *man/getinit.Rd
 930a1a304bd94c817d2c7aab6ec0bf8e *man/getprior.Rd
-f51f1becafe54aa2c61dd6520f652880 *man/titecrm.Rd
+620d0639f7eaea555c8b8a06f5a956b3 *man/titecrm.Rd
 869cf1e893d299dc8bc286b5a238e5c9 *man/titesim.Rd
