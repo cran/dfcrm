@@ -1,36 +1,64 @@
-crmh <- function(x)  exp(-x^2/2/s1p^2) * vcrm(x) #posterior
-crmht <- function(x)  x * exp(-x^2/2/s1p^2) * vcrm(x) #posterior*x
-crmht2 <- function(x) x^2 * exp(-x^2/2/s1p^2) * vcrm(x) #posterior*x*x
-
-crmhlgt <- function(x)  exp(-x^2/2/s1p^2) * vcrmlgt(x) #posterior
-crmhtlgt <- function(x)  x * exp(-x^2/2/s1p^2) * vcrmlgt(x) #posterior*x
-crmht2lgt <- function(x) x^2 * exp(-x^2/2/s1p^2) * vcrmlgt(x) #posterior*x*x
-
-vcrm <- function(a) { #likelihood of empiric function
-  v <- 1
-  for (i in 1:length(x1p))
-    v <- v*((x1p[i]^exp(a))^y1p[i])*(((1-w1p[i]*x1p[i]^exp(a))^(1-y1p[i])))
-  return(v)
-}
-lcrm <- function(a) { #loglikelihood of empiric function
-  v <- 0
-  for (i in 1:length(x1p))
-    v <- v + y1p[i]*log(x1p[i])*exp(a) + (1-y1p[i])*log(1 - w1p[i]*x1p[i]^exp(a))
-  return(v)
-}
-vcrmlgt <- function(a) { #likelihood of logit function
-  v <- 1
-  for (i in 1:length(x1p)) {
-    PSI <- (1 + exp(-alp0-exp(a)*x1p[i]))^{-1}
-    v <- v * (PSI^y1p[i]) * (1-w1p[i]*PSI)^(1-y1p[i])
+crmh = function(a,x,y,w,s) {  ## posterior
+  v = exp(-a^2/2/s^2) 
+  for (i in 1:length(x)) {
+	v = v * ((x[i]^exp(a))^y[i])*(((1-w[i]*x[i]^exp(a))^(1-y[i])))
   }
   return(v)
 }
-lcrmlgt <- function(a) { #loglikelihood of logit function
+crmht = function(a,x,y,w,s) { ## posterior times x
+  v = a * exp(-a^2/2/s^2) 
+  for (i in 1:length(x)) {
+	v = v * ((x[i]^exp(a))^y[i])*(((1-w[i]*x[i]^exp(a))^(1-y[i])))
+  }
+  return(v)
+}
+crmht2 = function(a,x,y,w,s) { ## posterior times x^2
+  v = a^2 * exp(-a^2/2/s^2) 
+  for (i in 1:length(x)) {
+	v = v * ((x[i]^exp(a))^y[i])*(((1-w[i]*x[i]^exp(a))^(1-y[i])))
+  }
+  return(v)
+}
+
+  
+crmhlgt <- function(a,x,y,w,s,alp0)  { ## posterior logit model
+  v = exp(-a^2/2/s^2) 
+  for (i in 1:length(x)) {
+ 	PSI <- (1 + exp(-alp0-exp(a)*x[i]))^{-1}
+    	v <- v * (PSI^y[i]) * (1-w[i]*PSI)^(1-y[i])
+  }
+  return(v)
+}
+crmhtlgt <- function(a,x,y,w,s,alp0)  { ## posterior times x
+  v = a * exp(-a^2/2/s^2) 
+  for (i in 1:length(x)) {
+ 	PSI <- (1 + exp(-alp0-exp(a)*x[i]))^{-1}
+    	v <- v * (PSI^y[i]) * (1-w[i]*PSI)^(1-y[i])
+  }
+  return(v)
+}
+crmht2lgt <- function(a,x,y,w,s,alp0)  { ## posterior times x^2
+  v = a^2 * exp(-a^2/2/s^2) 
+  for (i in 1:length(x)) {
+ 	PSI <- (1 + exp(-alp0-exp(a)*x[i]))^{-1}
+    	v <- v * (PSI^y[i]) * (1-w[i]*PSI)^(1-y[i])
+  }
+  return(v)
+}
+ 
+
+
+lcrm <- function(a,x,y,w) { #loglikelihood of empiric function
   v <- 0
-  for (i in 1:length(x1p)) {
-    PSI <- (1 + exp(-alp0-exp(a)*x1p[i]))^{-1}
-    v <- v + y1p[i]*log(PSI) + (1-y1p[i])*log(1-w1p[i]*PSI)
+  for (i in 1:length(x))
+    v <- v + y[i]*log(x[i])*exp(a) + (1-y[i])*log(1 - w[i]*x[i]^exp(a))
+  return(v)
+}
+lcrmlgt <- function(a,x,y,w,alp0) { #loglikelihood of logit function
+  v <- 0
+  for (i in 1:length(x)) {
+    PSI <- (1 + exp(-alp0-exp(a)*x[i]))^{-1}
+    v <- v + y[i]*log(PSI) + (1-y[i])*log(1-w[i]*PSI)
   }
   return(v)
 }
@@ -40,22 +68,21 @@ crm <- function(prior, target, tox, level, n=length(level),
                 method="bayes", model="empiric", intcpt=3,
                 scale=sqrt(1.34), model.detail=TRUE, patient.detail=TRUE, var.est=TRUE) {
 
-  y1p <<- tox[include]
-  w1p <<- rep(1,length(include))
-  s1p <<- scale
+  y1p <- tox[include]
+  w1p <- rep(1,length(include))
   if (model=="empiric") {
     dosescaled <- prior
     
-    x1p <<- prior[level[include]]
+    x1p <- prior[level[include]]
     if (method=="mle") {
       if (sum(y1p)==0 | sum(y1p)==length(y1p)) stop(" mle does not exist!")
-      est <- optimize(lcrm,c(-10,10),tol=0.0001,maximum=TRUE)$max
-      if (var.est) { s1p <<- 500; e2 <- integrate(crmht2,-Inf,Inf)[[1]] / integrate(crmh,-Inf,Inf)[[1]]; }
+      est <- optimize(lcrm,c(-10,10),x1p,y1p,w1p,tol=0.0001,maximum=TRUE)$max
+      if (var.est) { e2 <- integrate(crmht2,-100,100,x1p,y1p,w1p,500)[[1]] / integrate(crmh,-10,10,x1p,y1p,w1p,500)[[1]]; }
     }
     else if (method=="bayes") {
-      den <- integrate(crmh,-Inf,Inf)[[1]]
-      est <- integrate(crmht,-Inf,Inf)[[1]] / den
-      if (var.est) { e2 <- integrate(crmht2,-Inf,Inf)[[1]] / den; }
+      den <- integrate(crmh,-Inf,Inf,x1p,y1p,w1p,scale)[[1]]
+      est <- integrate(crmht,-10,10,x1p,y1p,w1p,scale)[[1]] / den
+      if (var.est) { e2 <- integrate(crmht2,-10,10,x1p,y1p,w1p,scale)[[1]] / den; }
     }
     else { stop(" unknown estimation method"); }
     ptox <- prior^exp(est)
@@ -73,18 +100,18 @@ crm <- function(prior, target, tox, level, n=length(level),
     if (!all(dosescaled<0)) {
       stop( "Intercept parameter in logit model is too small: scaled doses > 0!")
     }
-    
-    x1p <<- dosescaled[level[include]]
-    alp0 <<- intcpt
+   
+    x1p <- dosescaled[level[include]]
+ 
     if (method=="mle") {
       if (sum(y1p)==0 | sum(y1p)==length(y1p)) stop(" mle does not exist!")
-      est <- optimize(lcrmlgt,c(-10,10),tol=0.0001,maximum=TRUE)$max
-      if (var.est) { s1p <<- 500; e2 <- integrate(crmht2lgt,-Inf,Inf)[[1]] / integrate(crmhlgt,-Inf,Inf)[[1]]; }
+      est <- optimize(lcrmlgt,c(-10,10),x1p,y1p,w1p,intcpt,tol=0.0001,maximum=TRUE)$max
+      if (var.est) { e2 <- integrate(crmht2lgt,-100,100,x1p,y1p,w1p,500,intcpt)[[1]] / integrate(crmhlgt,-10,10,x1p,y1p,w1p,500,intcpt)[[1]]; }
     }
     else if (method=="bayes") {
-      den <- integrate(crmhlgt,-Inf,Inf)[[1]]
-      est <- integrate(crmhtlgt,-Inf,Inf)[[1]] / den
-      if (var.est) { e2 <- integrate(crmht2lgt,-Inf,Inf)[[1]] / den; }
+      den <- integrate(crmhlgt,-Inf,Inf,x1p,y1p,w1p,scale,intcpt)[[1]]
+      est <- integrate(crmhtlgt,-10,10,x1p,y1p,w1p,scale,intcpt)[[1]] / den
+      if (var.est) { e2 <- integrate(crmht2lgt,-10,10,x1p,y1p,w1p,scale,intcpt)[[1]] / den; }
     }
     else { stop(" unknown estimation method"); }
     ptox <- (1 + exp(-intcpt-exp(est)*dosescaled))^{-1}
@@ -394,27 +421,23 @@ titecrm <- function(prior, target, tox, level, n=length(level),
   }
   weights[tox==1] <- 1
   
-  y1p <<- tox[include]
-  w1p <<- weights[include]
-  s1p <<- scale
+  y1p <- tox[include]
+  w1p <- weights[include]
   if (model=="empiric") {
     dosescaled <- prior
-#    LB <- log(log((target+3)/4)/log(dosescaled[1]))
-#    UB <- log(log(target/5)/log(dosescaled[length(prior)]))
     
-    x1p <<- prior[level[include]]
+    x1p <- prior[level[include]]
     if (method=="mle") {
       if (sum(y1p)==0 | sum(y1p)==length(y1p)) stop(" mle does not exist!")
-      est <- optimize(lcrm,c(-10,10),tol=0.0001,maximum=TRUE)$max
-      if (var.est) { s1p <<- 500; e2 <- integrate(crmht2,-Inf,Inf)[[1]] / integrate(crmh,-Inf,Inf)[[1]]; }
+      est <- optimize(lcrm,c(-10,10),x1p,y1p,w1p,tol=0.0001,maximum=TRUE)$max
+      if (var.est) { e2 <- integrate(crmht2,-10,10,x1p,y1p,w1p,500)[[1]] / integrate(crmh,-10,10,x1p,y1p,w1p,500)[[1]]; }
     }
     else if (method=="bayes") {
-      den <- integrate(crmh,-Inf,Inf)[[1]]
-      est <- integrate(crmht,-Inf,Inf)[[1]] / den
-      if (var.est) { e2 <- integrate(crmht2,-Inf,Inf)[[1]] / den; }
+      den <- integrate(crmh,-Inf,Inf,x1p,y1p,w1p,scale)[[1]]
+      est <- integrate(crmht,-10,10,x1p,y1p,w1p,scale)[[1]] / den
+      if (var.est) { e2 <- integrate(crmht2,-10,10,x1p,y1p,w1p,scale)[[1]] / den; }
     }
     else { stop(" unknown estimation method"); }
-#    est <- min(UB, max(LB, est))
     ptox <- prior^exp(est)
     if (var.est) {
       post.var <- e2-est^2
@@ -433,17 +456,17 @@ titecrm <- function(prior, target, tox, level, n=length(level),
 #    LB <- log(  (log((1+target)/(1-target)) - intcpt)/dosescaled[1] ) - 3
 #    UB <- log(  (log((target/2)/(1-target/2)) - intcpt)/dosescaled[length(prior)] ) + 3
     
-    x1p <<- dosescaled[level[include]]
-    alp0 <<- intcpt
+    x1p <- dosescaled[level[include]]
+
     if (method=="mle") {
       if (sum(y1p)==0 | sum(y1p)==length(y1p)) stop(" mle does not exist!")
-      est <- optimize(lcrmlgt,c(-10,10),tol=0.0001,maximum=TRUE)$max
-      if (var.est) { s1p <<- 500; e2 <- integrate(crmht2lgt,-Inf,Inf)[[1]] / integrate(crmhlgt,-Inf,Inf)[[1]]; }
+      est <- optimize(lcrmlgt,c(-10,10),x1p,y1p,w1p,intcpt,tol=0.0001,maximum=TRUE)$max
+      if (var.est) { e2 <- integrate(crmht2lgt,-10,10,x1p,y1p,w1p,500,intcpt)[[1]] / integrate(crmhlgt,-10,10,x1p,y1p,w1p,500)[[1]]; }
     }
     else if (method=="bayes") {
-      den <- integrate(crmhlgt,-Inf,Inf)[[1]]
-      est <- integrate(crmhtlgt,-Inf,Inf)[[1]] / den
-      if (var.est) { e2 <- integrate(crmht2lgt,-Inf,Inf)[[1]] / den; }
+      den <- integrate(crmhlgt,-Inf,Inf,x1p,y1p,w1p,scale,intcpt)[[1]]
+      est <- integrate(crmhtlgt,-10,10,x1p,y1p,w1p,scale,intcpt)[[1]] / den
+      if (var.est) { e2 <- integrate(crmht2lgt,-10,10,x1p,y1p,w1p,scale,intcpt)[[1]] / den; }
     }
     else { stop(" unknown estimation method"); }
 #    est <- min(UB, max(LB, est))
@@ -1225,7 +1248,8 @@ print.sim <- function(x, dgt=3, patient.detail=TRUE, ...) {
     cat("\nThis trial is generated by a",x$design,"\n")
     if (length(x$x0)>1) {
       cat("Dose escalation proceeds as follows before any toxicity is seen:")
-      xtab <- cbind(1:K,table(x$x0))
+      xtab <- cbind(1:K,rep(NA,K))
+ 	for (k in 1:K) { xtab[k,2] = length(which(x$x0==k)); }
       colnames(xtab) <- c("dose.level","cohort.size")
       rownames(xtab) <- rep("",K)
       print(t(xtab));
@@ -1285,7 +1309,8 @@ print.sim <- function(x, dgt=3, patient.detail=TRUE, ...) {
     cat("\nThe trials are generated by a",x$design,"\n")
     if (length(x$x0)>1) {
       cat("Dose escalation proceeds as follows before any toxicity is seen:")
-      xtab <- cbind(1:K,table(x$x0))
+	xtab <- cbind(1:K,rep(NA,K))
+ 	for (k in 1:K) { xtab[k,2] = length(which(x$x0==k)); }
       colnames(xtab) <- c("dose.level","cohort.size")
       rownames(xtab) <- rep("",K)
       print(t(xtab))
@@ -1555,6 +1580,79 @@ crmsens <- function(prior,target,model="empiric",intcpt=3,eps=1e-6,maxit=100,det
   a
 }
 
+nopt = function(apcs,target,K,psi,correction=TRUE) {
+  pL = target / ( target + psi*(1-target) )
+  pU = target * psi / (1 - target + target*psi)
+  sigL = sqrt( target*(1-target) + pL*(1-pL) + 2*pL*(1-target) )
+  sigU = sqrt( target*(1-target) + pU*(1-pU) + 2*target*(1-pU) )
+
+  if (!correction) {
+    delL = (target - pL)/sigL
+    delU = (pU - target)/sigU
+    del = (delL + delU)/2
+    arg = 1 - K*(1-apcs)/2/(K-1)
+    val = ( qnorm(arg) / del )^2
+  }
+  else {
+    n = 1
+    while (T) {
+	delL = (target-pL+0.5/n)/sigL
+	delU = (pU-target-0.5/n)/sigU
+	del = (delL + delU)/2
+	bindex = 1/K + (1-1/K) * (2 * pnorm(sqrt(n)*del) - 1)
+	if (bindex >= apcs) { break; }
+	n = n+1
+    }
+    delL = (target-pL+0.5/n)/sigL
+    delU = (pU-target-0.5/n)/sigU
+    del = (delL + delU)/2
+    arg = 1 - K*(1-apcs)/2/(K-1)
+    val = ( qnorm(arg) / del )^2
+  }
+  val
+}
+
+getn = function(apcs,target,nlevel,psi,correction=TRUE,detail=FALSE) {
+  msg = "IMPORTANT: The calculated n is intended as a starting point, and is not recommended for use without validation by simulation"
+  if (target<0.1 | target>0.3) msg = c(msg, "Warning: The sample size algorithm has been validated for target rate ranging from 0.1 to 0.3 only")
+  if (nlevel<4 | nlevel >8) msg = c(msg, "Warning: The sample size algorithm has been validated for 4 to 8 dose levels only")
+  if (psi<1.25 | psi>2.5) msg = c(msg, "Warning: The sample size algorithm has been validated for odds ratio (psi) ranging from 1.25 to 2.50 only")
+  K = nlevel
+  lterm = ( log(apcs/(1-apcs)) - 2.26 + 0.00235*K^2 + 0.7*psi + 1.903/psi ) / 0.854
+  b = exp(lterm)/(1 + exp(lterm))
+  na = nopt(b,target,K,psi,correction=correction)
+  nb = nopt(apcs,target,K,psi,correction=correction)
+  eff = nb / na
+  if (na > 40)   msg = c(msg, "Warning: The calculation likely involves extrapolation - validate with simulation.")
+
+  val = list(n = ceiling(na), astar=apcs, target=target, nlevel=K, psi=psi, bstar=b, efficiency = eff, correction=correction, na=na,nb=nb, messages=msg, detail=detail)
+  class(val) = "crmsize"
+  val
+}
+
+print.crmsize = function(x, detail=x$detail, ...) {
+  cat(" Target rate:\t\t\t", x$target, "\n")
+  cat(" Number of dose levels:\t\t",x$nlevel,"\n")
+  cat(" Effect size (odds ratio):\t",x$psi,"\n")
+  cat(" Required accuracy:\t\t",x$astar,"\n")
+  cat(" Calculated sample size:\t",x$n,"\n\n")
+
+  if (detail) {
+  	if (x$correction) { cat(" Method: With continuity correction\n"); }
+	else { cat(" Method: Without continuity correction\n"); }
+
+	cat(" Required sample size (to first decimal place):\t\t",round(x$na,digits=1),"\n")
+	cat(" Sample size lower bound (to first decimal place):\t",round(x$nb,digits=1),"\n")
+      cat(" Efficiency relative to optimal benchmark:\t\t",x$efficiency,"\n\n")
+
+      cat("Messages\n")
+      print(x$messages)
+  }
+
+  cat("\n")
+}
+    
+
 getprior <- function(halfwidth,target,nu,nlevel,model="empiric", intcpt=3) {
   dosescaled <- prior <- rep(NA,nlevel)
   b <- rep(NA,nlevel+1)
@@ -1590,22 +1688,3 @@ getprior <- function(halfwidth,target,nu,nlevel,model="empiric", intcpt=3) {
   }
   val
 }
-
-#print.homesets <- function(x,dgt=3, ...) {
-#  if (x$detail) {3    cat("\nHome sets for the model setup:")
-#    dimnames(x$homeset) <- list(NULL,c("",""))
-#    print(x$homeset)
-#  }
-
-# cat("\nTrue","\t\t","Indifference interval","\n")
-#  cat("MTD","\t\t","Lower","\t\t","Upper","\n")
-#  for (k in 1:x$K) cat(k,"\t\t",round(x$iint[k,1],digits=dgt),"\t\t",round(x$iint[k,4],digits=dgt),"\n")
-#  cat("With this model, the CRM will eventually choose a dose with \n")
-#  cat(" ptox between", signif(min(x$iint[(2:x$K),1]),digits=dgt),"and",signif(max(x$iint[(1:(x$K-1)),4]),digits=dgt),
-#      "while targeting at",x$target,"\n\n")
-#  cat("Consistency will hold if\n")
-#  cat("(i) the dose below the MTD does not exceed the Lower limit\n")
-#  cat("(ii) the dose above the MTD is more toxic than the Upper limit\n\n")
-#}
-
-

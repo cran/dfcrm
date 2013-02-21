@@ -1,6 +1,6 @@
 Package: dfcrm
-Version: 0.1-5
-Date: 2011-08-22
+Version: 0.2-1
+Date: 2013-02-21
 Title: Dose-finding by the continual reassessment method
 Author: Ken Cheung <yc632@columbia.edu>
 Maintainer: Jimmy Duong <jkd2108@columbia.edu>
@@ -9,6 +9,7 @@ Description: This package provides functions to run the CRM and
         planning purposes.
 License: GPL-2
 URL: http://www.columbia.edu/~yc632
-Packaged: 2012-10-29 08:58:33 UTC; ripley
+Packaged: 2013-02-21 20:04:38 UTC; User
+NeedsCompilation: no
 Repository: CRAN
-Date/Publication: 2012-10-29 08:58:33
+Date/Publication: 2013-02-28 07:24:46

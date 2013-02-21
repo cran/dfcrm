@@ -7,8 +7,6 @@
 \alias{lcrm}
 \alias{lcrmlgt}
 \alias{myjitter}
-\alias{vcrm}
-\alias{vcrmlgt}
 
 \title{Executing the CRM}
 \description{
