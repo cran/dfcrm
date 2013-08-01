@@ -77,12 +77,12 @@ crm <- function(prior, target, tox, level, n=length(level),
     if (method=="mle") {
       if (sum(y1p)==0 | sum(y1p)==length(y1p)) stop(" mle does not exist!")
       est <- optimize(lcrm,c(-10,10),x1p,y1p,w1p,tol=0.0001,maximum=TRUE)$max
-      if (var.est) { e2 <- integrate(crmht2,-100,100,x1p,y1p,w1p,500)[[1]] / integrate(crmh,-10,10,x1p,y1p,w1p,500)[[1]]; }
+      if (var.est) { e2 <- integrate(crmht2,-100,100,x1p,y1p,w1p,500,abs.tol=0)[[1]] / integrate(crmh,-10,10,x1p,y1p,w1p,500,abs.tol=0)[[1]]; }
     }
     else if (method=="bayes") {
-      den <- integrate(crmh,-Inf,Inf,x1p,y1p,w1p,scale)[[1]]
-      est <- integrate(crmht,-10,10,x1p,y1p,w1p,scale)[[1]] / den
-      if (var.est) { e2 <- integrate(crmht2,-10,10,x1p,y1p,w1p,scale)[[1]] / den; }
+      den <- integrate(crmh,-Inf,Inf,x1p,y1p,w1p,scale,abs.tol=0)[[1]]
+      est <- integrate(crmht,-10,10,x1p,y1p,w1p,scale,abs.tol=0)[[1]] / den
+      if (var.est) { e2 <- integrate(crmht2,-10,10,x1p,y1p,w1p,scale,abs.tol=0)[[1]] / den; }
     }
     else { stop(" unknown estimation method"); }
     ptox <- prior^exp(est)
@@ -106,12 +106,12 @@ crm <- function(prior, target, tox, level, n=length(level),
     if (method=="mle") {
       if (sum(y1p)==0 | sum(y1p)==length(y1p)) stop(" mle does not exist!")
       est <- optimize(lcrmlgt,c(-10,10),x1p,y1p,w1p,intcpt,tol=0.0001,maximum=TRUE)$max
-      if (var.est) { e2 <- integrate(crmht2lgt,-100,100,x1p,y1p,w1p,500,intcpt)[[1]] / integrate(crmhlgt,-10,10,x1p,y1p,w1p,500,intcpt)[[1]]; }
+      if (var.est) { e2 <- integrate(crmht2lgt,-100,100,x1p,y1p,w1p,500,intcpt,abs.tol=0)[[1]] / integrate(crmhlgt,-10,10,x1p,y1p,w1p,500,intcpt,abs.tol=0)[[1]]; }
     }
     else if (method=="bayes") {
-      den <- integrate(crmhlgt,-Inf,Inf,x1p,y1p,w1p,scale,intcpt)[[1]]
-      est <- integrate(crmhtlgt,-10,10,x1p,y1p,w1p,scale,intcpt)[[1]] / den
-      if (var.est) { e2 <- integrate(crmht2lgt,-10,10,x1p,y1p,w1p,scale,intcpt)[[1]] / den; }
+      den <- integrate(crmhlgt,-Inf,Inf,x1p,y1p,w1p,scale,intcpt,abs.tol=0)[[1]]
+      est <- integrate(crmhtlgt,-10,10,x1p,y1p,w1p,scale,intcpt,abs.tol=0)[[1]] / den
+      if (var.est) { e2 <- integrate(crmht2lgt,-10,10,x1p,y1p,w1p,scale,intcpt,abs.tol=0)[[1]] / den; }
     }
     else { stop(" unknown estimation method"); }
     ptox <- (1 + exp(-intcpt-exp(est)*dosescaled))^{-1}
@@ -430,12 +430,12 @@ titecrm <- function(prior, target, tox, level, n=length(level),
     if (method=="mle") {
       if (sum(y1p)==0 | sum(y1p)==length(y1p)) stop(" mle does not exist!")
       est <- optimize(lcrm,c(-10,10),x1p,y1p,w1p,tol=0.0001,maximum=TRUE)$max
-      if (var.est) { e2 <- integrate(crmht2,-10,10,x1p,y1p,w1p,500)[[1]] / integrate(crmh,-10,10,x1p,y1p,w1p,500)[[1]]; }
+      if (var.est) { e2 <- integrate(crmht2,-10,10,x1p,y1p,w1p,500,abs.tol=0)[[1]] / integrate(crmh,-10,10,x1p,y1p,w1p,500,abs.tol=0)[[1]]; }
     }
     else if (method=="bayes") {
-      den <- integrate(crmh,-Inf,Inf,x1p,y1p,w1p,scale)[[1]]
-      est <- integrate(crmht,-10,10,x1p,y1p,w1p,scale)[[1]] / den
-      if (var.est) { e2 <- integrate(crmht2,-10,10,x1p,y1p,w1p,scale)[[1]] / den; }
+      den <- integrate(crmh,-Inf,Inf,x1p,y1p,w1p,scale,abs.tol=0)[[1]]
+      est <- integrate(crmht,-10,10,x1p,y1p,w1p,scale,abs.tol=0)[[1]] / den
+      if (var.est) { e2 <- integrate(crmht2,-10,10,x1p,y1p,w1p,scale,abs.tol=0)[[1]] / den; }
     }
     else { stop(" unknown estimation method"); }
     ptox <- prior^exp(est)
@@ -461,12 +461,12 @@ titecrm <- function(prior, target, tox, level, n=length(level),
     if (method=="mle") {
       if (sum(y1p)==0 | sum(y1p)==length(y1p)) stop(" mle does not exist!")
       est <- optimize(lcrmlgt,c(-10,10),x1p,y1p,w1p,intcpt,tol=0.0001,maximum=TRUE)$max
-      if (var.est) { e2 <- integrate(crmht2lgt,-10,10,x1p,y1p,w1p,500,intcpt)[[1]] / integrate(crmhlgt,-10,10,x1p,y1p,w1p,500)[[1]]; }
+      if (var.est) { e2 <- integrate(crmht2lgt,-10,10,x1p,y1p,w1p,500,intcpt,abs.tol=0)[[1]] / integrate(crmhlgt,-10,10,x1p,y1p,w1p,500,abs.tol=0)[[1]]; }
     }
     else if (method=="bayes") {
-      den <- integrate(crmhlgt,-Inf,Inf,x1p,y1p,w1p,scale,intcpt)[[1]]
-      est <- integrate(crmhtlgt,-10,10,x1p,y1p,w1p,scale,intcpt)[[1]] / den
-      if (var.est) { e2 <- integrate(crmht2lgt,-10,10,x1p,y1p,w1p,scale,intcpt)[[1]] / den; }
+      den <- integrate(crmhlgt,-Inf,Inf,x1p,y1p,w1p,scale,intcpt,abs.tol=0)[[1]]
+      est <- integrate(crmhtlgt,-10,10,x1p,y1p,w1p,scale,intcpt,abs.tol=0)[[1]] / den
+      if (var.est) { e2 <- integrate(crmht2lgt,-10,10,x1p,y1p,w1p,scale,intcpt,abs.tol=0)[[1]] / den; }
     }
     else { stop(" unknown estimation method"); }
 #    est <- min(UB, max(LB, est))
