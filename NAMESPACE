@@ -3,3 +3,16 @@
 
 # Export all names
 exportPattern(".")
+
+importFrom("graphics", "abline", "hist", "legend", "lines", "locator",
+           "mtext", "par", "plot", "points", "text")
+importFrom("stats", "integrate", "median", "optimize", "pnorm",
+           "qnorm", "quantile", "rbinom", "rexp", "runif")
+importFrom("utils", "menu")
+
+S3method(plot, mtd)
+S3method(plot, sim)
+S3method(print, crmsize)
+S3method(print, dxcrm)
+S3method(print, mtd)
+S3method(print, sim)
